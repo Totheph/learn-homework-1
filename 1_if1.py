@@ -36,7 +36,6 @@ def main():
     suitable_activity = activities(age)
     print(suitable_activity)
     
-    pass
   
 
 
