@@ -9,7 +9,7 @@ import settings
 from datetime import date
 import ephem
 
-logging.basicConfig(filename="bot.log", level=logging.DEBUG)
+logging.basicConfig(filename="bot.log", level=logging.DEBUG) #не обращайте внимание на уровень DEBUG (мне он был нужен во время попыток разобраться)
 
 def greet_user(update, context):
   print("Введен /start")
