@@ -2,55 +2,76 @@
 Домашнее задание №1
 
 Использование библиотек: ephem
-
-* Установите модуль ephem
-* Добавьте в бота команду /planet, которая будет принимать на вход
-  название планеты на английском, например /planet Mars
-* В функции-обработчике команды из update.message.text получите
-  название планеты (подсказка: используйте .split())
-* При помощи условного оператора if и ephem.constellation научите
-  бота отвечать, в каком созвездии сегодня находится планета.
-
 """
 import logging
-
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import settings
+from datetime import date
+import ephem
 
-logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO,
-                    filename='bot.log')
-
-
-PROXY = {
-    'proxy_url': 'socks5://t1.learn.python.ru:1080',
-    'urllib3_proxy_kwargs': {
-        'username': 'learn',
-        'password': 'python'
-    }
-}
-
+logging.basicConfig(filename="bot.log", level=logging.DEBUG)
 
 def greet_user(update, context):
-    text = 'Вызван /start'
-    print(text)
-    update.message.reply_text(text)
+  print("Введен /start")
+  update.message.reply_text(f"Здравствуй, пользователь! Ты ввел команду /start\nНаш бот может показать текущее созвездие планеты, для этого введи команду /planet и название планеты в той же строке (пример: /planet Mars)")
 
 
-def talk_to_me(update, context):
-    user_text = update.message.text
-    print(user_text)
-    update.message.reply_text(text)
+def planett(update, context):
+  text = update.message.text.split()
+  planet = text[-1]
+  if planet.lower() == "mars":
+      mars = ephem.Mars()
+      mars.compute(ephem.Date(date.today()))
+      const = ephem.constellation(mars)
+      update.message.reply_text(const)
+  elif planet.lower() == "venus":
+      venus = ephem.Venus()
+      venus.compute(ephem.Date(date.today()))
+      const = ephem.constellation(venus)
+      update.message.reply_text(const)
+  elif planet.lower() == "mercury":
+      mercury = ephem.Mercury()
+      mercury.compute(ephem.Date(date.today()))
+      const = ephem.constellation(mercury)
+      update.message.reply_text(const)
+  elif planet.lower() == "jupiter":
+      jupiter = ephem.Jupiter()
+      jupiter.compute(ephem.Date(date.today()))
+      const = ephem.constellation(jupiter)
+      update.message.reply_text(const)
+  elif planet.lower() == "saturn":
+      saturn = ephem.Saturn()
+      saturn.compute(ephem.Date(date.today()))
+      const = ephem.constellation(saturn)
+      update.message.reply_text(const)
+  elif planet.lower() == "uranus":
+      uranus = ephem.Uranus()
+      uranus.compute(ephem.Date(date.today()))
+      const = ephem.constellation(uranus)
+      update.message.reply_text(const)
+  elif planet.lower() == "neptune":
+      neptune = ephem.Neptune()
+      neptune.compute(ephem.Date(date.today()))
+      const = ephem.constellation(neptune)
+      update.message.reply_text(const)
+  else:
+      update.message.reply_text("Не можем вычислить созвездие")
 
 
 def main():
-    mybot = Updater("КЛЮЧ, КОТОРЫЙ НАМ ВЫДАЛ BotFather", request_kwargs=PROXY, use_context=True)
+  mybot = Updater(settings.API_KEY, use_context=True)
 
-    dp = mybot.dispatcher
-    dp.add_handler(CommandHandler("start", greet_user))
-    dp.add_handler(MessageHandler(Filters.text, talk_to_me))
+  dp = mybot.dispatcher
 
-    mybot.start_polling()
-    mybot.idle()
+  dp.add_handler(CommandHandler("start", greet_user))
+  dp.add_handler(CommandHandler("planet", planett))
+
+
+  logging.info("Бот начал работу")
+
+  mybot.start_polling()
+
+  mybot.idle()
 
 
 if __name__ == "__main__":
