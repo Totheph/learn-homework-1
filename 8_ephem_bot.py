@@ -24,7 +24,7 @@ def planett(update, context):
         const = ephem.constellation(planet)
         update.message.reply_text(const)
     else:
-        update.message.reply_text("Не можем вычислить созвездие. Введите правильное название планеты")
+        update.message.reply_text("Не можем вычислить созвездие. Введите правильное название планеты.")
 
 
 def main():
